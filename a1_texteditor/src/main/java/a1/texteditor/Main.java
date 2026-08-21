@@ -1,6 +1,7 @@
-
+// program entry
 package a1.texteditor;
 
+import java.awt.BorderLayout;
 import java.awt.Container;
 
 import javax.swing.JFrame;
@@ -28,10 +29,20 @@ public class Main extends JFrame {
         menuPanel menuBar = new menuPanel();
         this.setJMenuBar(menuBar);
 
+        EditorPanel editorPanel = new EditorPanel();
 
-        // This allows panels to be displayed properly
+        // BorderLayout instead of null: with null layout nothing gets
+        // sized/positioned unless you setBounds() on it yourself, and it
+        // won't respond properly to the frame's size. BorderLayout.CENTER
+        // makes the editor fill all remaining space automatically.
         Container content = this.getContentPane();
-        content.setLayout(null);
+        content.setLayout(new BorderLayout());
+        content.add(editorPanel, BorderLayout.CENTER);
+
+        // Wire up File menu actions to the editor panel
+        menuBar.getNewItem().addActionListener(e -> editorPanel.newFile());
+        menuBar.getOpenItem().addActionListener(e -> editorPanel.openFile());
+        menuBar.getSaveItem().addActionListener(e -> editorPanel.saveFile());
 
         // By making our JFrame visible, the JVM will call the
         // paintComponent() method of any JPanels registered to the

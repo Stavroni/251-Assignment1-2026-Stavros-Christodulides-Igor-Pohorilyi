@@ -46,4 +46,10 @@ public class menuPanel extends JMenuBar{
 
     }
 
+    // Getters so Main can attach the actual functionality
+    public JMenuItem getNewItem() { return newItem; }
+    public JMenuItem getOpenItem() { return openItem; }
+    public JMenuItem getSaveItem() { return saveItem; }
+    public JMenuItem getExitItem() { return exitItem; }
+
 }
