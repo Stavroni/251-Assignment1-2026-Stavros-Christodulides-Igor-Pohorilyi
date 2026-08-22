@@ -4,11 +4,17 @@
 
 package a1.texteditor;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 
 public class EditorPanel extends JPanel {
 
@@ -85,4 +91,29 @@ public class EditorPanel extends JPanel {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    //------------------------------------------------------------
+    //helpfull textpane documentation; https://www.geeksforgeeks.org/java/java-jtextpane/
+
+    public void selectText() {
+        textPane.selectAll();
+    }
+
+    public void cutText() {
+        textPane.cut();
+    }
+
+    public void copyText() {
+        textPane.copy();
+    }
+
+    public void pasteText() {
+        textPane.paste();
+    }
+
+    //getters to implement action listeners for sccp
+
+
+
+
 }

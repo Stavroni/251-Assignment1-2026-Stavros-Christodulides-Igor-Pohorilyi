@@ -3,6 +3,9 @@ package a1.texteditor;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -43,6 +46,27 @@ public class Main extends JFrame {
         menuBar.getNewItem().addActionListener(e -> editorPanel.newFile());
         menuBar.getOpenItem().addActionListener(e -> editorPanel.openFile());
         menuBar.getSaveItem().addActionListener(e -> editorPanel.saveFile());
+
+        menuBar.getviewTime().addActionListener(e -> {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            Calendar cal = Calendar.getInstance();
+            String timeString = dateFormat.format(cal.getTime()) + "\n";
+
+            try {
+                editorPanel.getTextPane().getDocument().insertString(0, timeString, null);
+                editorPanel.getTextPane().setCaretPosition(0);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        //ADD action listeners for sccp:
+        menuBar.getSelectText().addActionListener(e -> {editorPanel.selectText(); });
+        menuBar.getCutText().addActionListener(e -> {editorPanel.cutText(); });
+        menuBar.getCopyText().addActionListener(e -> {editorPanel.copyText(); });
+        menuBar.getPasteText().addActionListener(e -> {editorPanel.pasteText(); });
+
+        //-----------------------------
 
         // By making our JFrame visible, the JVM will call the
         // paintComponent() method of any JPanels registered to the
