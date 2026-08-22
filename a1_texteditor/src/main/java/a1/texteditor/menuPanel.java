@@ -49,15 +49,6 @@ public class menuPanel extends JMenuBar{
 
 
     searchMenu.add(searchPanel);
-
-    //create logic for searching
-        /*
-        searchbutton.addActionListener(e -> {
-    
-    });
-     */
-
-
     //--------------------------------------------------------------------------------
     JMenu viewMenu = new JMenu("View");
     viewTime = new JMenuItem("Time & date");
