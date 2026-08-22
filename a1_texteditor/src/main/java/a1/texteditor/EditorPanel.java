@@ -2,9 +2,10 @@
 // Using JTextPane instead of JTextArea because it supports StyledDocument,
 // which is what you'll need later for syntax highlighting.
 //
-// Open/Save now understands two formats:
+// Open/Save now understands three formats:
 //   - .txt  -> plain text, read/written with java.nio.file
 //   - .odt  -> OpenDocument Text, read/written with Apache ODFToolkit (simple-odf)
+//   - .rtf  -> Rich Text Format, read/written with the JDK's built-in RTFEditorKit
 // Anything else falls back to plain text handling.
 
 package a1.texteditor;
@@ -12,6 +13,8 @@ package a1.texteditor;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.nio.file.Files;
 
 import javax.swing.JFileChooser;
@@ -20,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.rtf.RTFEditorKit;
 
 import org.odftoolkit.simple.TextDocument;
 import org.odftoolkit.simple.common.TextExtractor;
@@ -46,6 +50,8 @@ public class EditorPanel extends JPanel {
                 new FileNameExtensionFilter("Text files (*.txt)", "txt"));
         fileChooser.addChoosableFileFilter(
                 new FileNameExtensionFilter("OpenDocument Text (*.odt)", "odt"));
+        fileChooser.addChoosableFileFilter(
+                new FileNameExtensionFilter("Rich Text Format (*.rtf)", "rtf"));
     }
 
     // Exposed in case you want to attach a DocumentListener/UndoManager
@@ -66,8 +72,13 @@ public class EditorPanel extends JPanel {
         }
         File file = fileChooser.getSelectedFile();
         try {
-            String content = isOdt(file) ? readOdt(file) : Files.readString(file.toPath());
-            textPane.setText(content);
+            if (isOdt(file)) {
+                textPane.setText(readOdt(file));
+            } else if (isRtf(file)) {
+                readRtf(file);
+            } else {
+                textPane.setText(Files.readString(file.toPath()));
+            }
             textPane.setCaretPosition(0);
             currentFile = file;
         } catch (Exception e) {
@@ -94,7 +105,7 @@ public class EditorPanel extends JPanel {
 
         // If the user didn't type an extension, default to .txt so we know
         // which writer to use later.
-        if (!isOdt(file) && !isTxt(file)) {
+        if (!isOdt(file) && !isRtf(file) && !isTxt(file)) {
             file = new File(file.getParentFile(), file.getName() + ".txt");
         }
 
@@ -106,6 +117,8 @@ public class EditorPanel extends JPanel {
         try {
             if (isOdt(file)) {
                 writeOdt(file);
+            } else if (isRtf(file)) {
+                writeRtf(file);
             } else {
                 Files.writeString(file.toPath(), textPane.getText());
             }
@@ -124,6 +137,10 @@ public class EditorPanel extends JPanel {
 
     private boolean isTxt(File file) {
         return file.getName().toLowerCase().endsWith(".txt");
+    }
+
+    private boolean isRtf(File file) {
+        return file.getName().toLowerCase().endsWith(".rtf");
     }
 
     // Reads an .odt file and returns its plain text content, paragraphs
@@ -157,6 +174,29 @@ public class EditorPanel extends JPanel {
             doc.save(file);
         } finally {
             doc.close();
+        }
+    }
+
+    // Reads an .rtf file straight into the textPane using the JDK's
+    // built-in RTFEditorKit, which understands basic fonts/styles/colors.
+    // This replaces the textPane's underlying Document with the one the
+    // kit builds while parsing, so formatting from the RTF file survives.
+    private void readRtf(File file) throws Exception {
+        RTFEditorKit rtfKit = new RTFEditorKit();
+        javax.swing.text.Document rtfDoc = rtfKit.createDefaultDocument();
+        try (FileInputStream in = new FileInputStream(file)) {
+            rtfKit.read(in, rtfDoc, 0);
+        }
+        textPane.setDocument(rtfDoc);
+    }
+
+    // Writes the textPane's current document out as RTF, preserving
+    // whatever character/paragraph formatting is present in the styled
+    // document (bold, italic, fonts, etc.).
+    private void writeRtf(File file) throws Exception {
+        RTFEditorKit rtfKit = new RTFEditorKit();
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            rtfKit.write(out, textPane.getDocument(), 0, textPane.getDocument().getLength());
         }
     }
 
