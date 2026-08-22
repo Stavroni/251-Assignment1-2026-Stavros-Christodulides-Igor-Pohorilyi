@@ -163,8 +163,10 @@ public class EditorPanel extends JPanel {
     //------------------------------------------------------------
     //helpfull textpane documentation; https://www.geeksforgeeks.org/java/java-jtextpane/
 
+    //idk what select text could otherwise imply cuz you have to hover over text to select it anyway, thus making a
+    //  select text which saves the text as e.g a string to be used by copy/cut redundant
     public void selectText() {
-        textPane.selectAll();
+        textPane.getSelectedText();
     }
 
     public void cutText() {
