@@ -23,6 +23,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 import javax.swing.text.rtf.RTFEditorKit;
 
 import org.odftoolkit.simple.TextDocument;
@@ -58,6 +61,41 @@ public class EditorPanel extends JPanel {
     // from Main later, or hook in a highlighter.
     public JTextPane getTextPane() {
         return textPane;
+    }
+
+    private final Highlighter.HighlightPainter searchPainter =
+            new DefaultHighlighter.DefaultHighlightPainter(java.awt.Color.YELLOW);
+
+    public int searchText(String query) {
+        Highlighter highlighter = textPane.getHighlighter();
+        highlighter.removeAllHighlights(); // clear previous search's highlights
+
+        if (query == null || query.isEmpty()) {
+            return 0;
+        }
+
+        String content = textPane.getText();
+        String lowerContent = content.toLowerCase();
+        String lowerQuery = query.toLowerCase();
+
+        int index = 0;
+        int matches = 0;
+        while ((index = lowerContent.indexOf(lowerQuery, index)) != -1) {
+            try {
+                highlighter.addHighlight(index, index + query.length(), searchPainter);
+            } catch (BadLocationException e) {
+                // shouldn't happen since index comes from the text itself
+            }
+            index += query.length();
+            matches++;
+        }
+
+        if (matches > 0) {
+            // jump the caret to the first match so the user sees it immediately
+            int firstMatch = lowerContent.indexOf(lowerQuery);
+            textPane.setCaretPosition(firstMatch);
+        }
+        return matches;
     }
 
     public void newFile() {

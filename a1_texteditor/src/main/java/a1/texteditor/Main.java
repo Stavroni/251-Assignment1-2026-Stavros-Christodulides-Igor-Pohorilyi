@@ -9,7 +9,7 @@ import java.util.Calendar;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
-import javax.swing.text.rtf;
+import javax.swing.JOptionPane;
 
 public class Main extends JFrame {
 
@@ -66,6 +66,13 @@ public class Main extends JFrame {
         menuBar.getCutText().addActionListener(e -> {editorPanel.cutText(); });
         menuBar.getCopyText().addActionListener(e -> {editorPanel.copyText(); });
         menuBar.getPasteText().addActionListener(e -> {editorPanel.pasteText(); });
+        menuBar.getSearchButton().addActionListener(e -> {
+            String query = menuBar.getSearchField().getText();
+            int matches = editorPanel.searchText(query);
+            if (matches == 0 && !query.isEmpty()) {
+                JOptionPane.showMessageDialog(Main.this, "No matches found for \"" + query + "\"");
+            }
+        });
 
         //-----------------------------
 

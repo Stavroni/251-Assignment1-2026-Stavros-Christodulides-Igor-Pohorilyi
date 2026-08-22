@@ -13,7 +13,8 @@ import javax.swing.JTextField;
 public class menuPanel extends JMenuBar{
     //create filemenu items
     private JMenuItem newItem, openItem, saveItem, printFile, exitItem, viewTime, selectText, cutText, copyText, pastetext, about;
-    private JTextField searchfeild;
+    private JTextField searchField;
+    private JButton searchButton;
 
     public menuPanel () {
     //--------------------------------------------------------------------------------
@@ -40,8 +41,8 @@ public class menuPanel extends JMenuBar{
 
     JPanel searchPanel = new JPanel();
 
-    JTextField searchField = new JTextField(8);
-    JButton searchButton = new JButton("Search");
+    searchField = new JTextField(8);
+    searchButton = new JButton("Search");
 
     searchPanel.add(searchField);
     searchPanel.add(searchButton);
@@ -110,6 +111,8 @@ public class menuPanel extends JMenuBar{
     public JMenuItem getCutText() {return cutText; }
     public JMenuItem getCopyText() {return copyText; }
     public JMenuItem getPasteText() {return pastetext; }
+    public JTextField getSearchField() { return searchField; }
+    public JButton getSearchButton() { return searchButton; }
 
     //print item
     public JMenuItem getPrintFile() {return printFile;}
