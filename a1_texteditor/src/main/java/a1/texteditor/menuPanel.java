@@ -6,12 +6,13 @@ import javax.swing.JButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class menuPanel extends JMenuBar{
     //create filemenu items
-    private JMenuItem newItem, openItem, saveItem, exitItem, viewTime, selectText, cutText, copyText, pastetext;
+    private JMenuItem newItem, openItem, saveItem, printFile, exitItem, viewTime, selectText, cutText, copyText, pastetext, about;
     private JTextField searchfeild;
 
     public menuPanel () {
@@ -20,6 +21,7 @@ public class menuPanel extends JMenuBar{
     newItem = new JMenuItem("New");
     openItem = new JMenuItem("Open");
     saveItem = new JMenuItem("Save");
+    printFile = new JMenuItem("Print");
     exitItem = new JMenuItem("Exit");
 
     exitItem.addActionListener(e -> System.exit(0));//First action listener to test if will work
@@ -27,8 +29,12 @@ public class menuPanel extends JMenuBar{
     fileMenu.add(newItem);
     fileMenu.add(openItem);
     fileMenu.add(saveItem);
+    fileMenu.add(printFile);
     fileMenu.add(exitItem);
     
+    printFile.addActionListener(e -> {
+
+    });
     //-------------------------------------------------------------------------------
     JMenu searchMenu = new JMenu("Search");
 
@@ -73,6 +79,14 @@ public class menuPanel extends JMenuBar{
     //--------------------------------------------------------------------------------
     JMenu helpMenu = new JMenu("Help");
 
+    about = new JMenuItem("About");
+
+    helpMenu.add(about);
+
+    about.addActionListener(e -> {
+        JOptionPane.showMessageDialog(null, "Stavros Christodulides, Igor Pohorilyiln\n We will carry the flame.");
+    });
+
 
     this.add(fileMenu);
     this.add(searchMenu);
@@ -96,4 +110,7 @@ public class menuPanel extends JMenuBar{
     public JMenuItem getCutText() {return cutText; }
     public JMenuItem getCopyText() {return copyText; }
     public JMenuItem getPasteText() {return pastetext; }
+
+    //print item
+    public JMenuItem getPrintFile() {return printFile;}
 }

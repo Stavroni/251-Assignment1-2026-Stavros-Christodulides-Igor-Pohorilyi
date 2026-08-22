@@ -181,7 +181,17 @@ public class EditorPanel extends JPanel {
         textPane.paste();
     }
 
-    //getters to implement action listeners for sccp
+    //print textpane
+    public void printPane() {
+        try {
+            textPane.print();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Could not print file:\n" + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }
 
 
 

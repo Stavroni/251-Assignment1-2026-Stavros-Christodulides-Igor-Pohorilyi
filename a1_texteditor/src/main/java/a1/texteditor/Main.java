@@ -68,6 +68,9 @@ public class Main extends JFrame {
 
         //-----------------------------
 
+        //print action
+        menuBar.getPrintFile().addActionListener(e -> {editorPanel.printPane(); });
+
         // By making our JFrame visible, the JVM will call the
         // paintComponent() method of any JPanels registered to the
         // JFrame
